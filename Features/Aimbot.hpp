@@ -3762,7 +3762,7 @@ struct Aimbot {
         if (!AdvancedAim) {   
 
         if(AimbotMode == 0) {
-            SmoothAngle(CurrentTarget, DesiredAngles);
+            //SmoothAngle(CurrentTarget, DesiredAngles);
             //std::this_thread::sleep_for(std::chrono::milliseconds(20));
             //SmoothAngle(CurrentTarget, DesiredAngles);
 
@@ -3777,7 +3777,7 @@ struct Aimbot {
 
             if (DesiredAngles == QAngle(0, 0)) return;
             DesiredAngles.NormalizeAngles();
-            //SmoothAngle(CurrentTarget, DesiredAngles); // wasnt sure if recoil was better with this before or after recoil calc or if it even changed lul
+            SmoothAngle(CurrentTarget, DesiredAngles); // wasnt sure if recoil was better with this before or after recoil calc or if it even changed lul
 
             Vector2D aimbotD = Vector2D(CalculatePitchIncrement(DesiredAngles), CalculateYawIncrement(DesiredAngles)).Multiply(Speed);
 
