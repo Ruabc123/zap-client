@@ -69,6 +69,7 @@ struct Sense
 	bool DrawSeer = false;
 	bool DrawStatus = true;
 	bool DrawWeapon = false;
+        bool drawlvl = true;
 	bool WeaponColorType = false;
 	bool ShowLegend = false;
 	bool ShowMaxStatusValues = true;
@@ -283,6 +284,10 @@ struct Sense
 						ImGui::SetTooltip("Adds their max health and max armor at the end.");
 				}
 
+				 ImGui::Checkbox("Draw Level", &drawlvl);
+                		 if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                   		 	ImGui::SetTooltip("Show What Level The Enemy Is.");
+
 				ImGui::Checkbox("Draw Legend", &ShowLegend);
 				if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
 					ImGui::SetTooltip("Show What Legend The Enemy Is Playing As.");
@@ -472,6 +477,7 @@ struct Sense
 
 			Config::Sense::HealthBar = HealthBar;
 			Config::Sense::ShieldBar = ShieldBar;
+			Config::Sense::drawlvl = drawlvl;
 			Config::Sense::BarMode = BarMode;
 			Config::Sense::BarStyle = BarStyle;
 			Config::Sense::BarColorMode = Modules::Sense::BarColorMode;
@@ -1123,87 +1129,148 @@ struct Sense
 					// Show Legend
 					if (ShowLegend)
 					{
-					 float height = HeadPositionW2S.y - LocalOriginW2S.y;
-		                         float width = height / 4.f;           
-		                         float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f ;
+                    // float height = HeadPositionW2S.y - LocalOriginW2S.y;
+                    // float width = height / 4.f;
+                    // float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f ;
+
+                    //    if (p->IsHostile && p->IsVisible && bLocalOriginW2SValid && bHeadPositionW2SValid && !p->IsDummy())
+                    //	{
+                    //		Renderer::DrawText(Canvas, Vector2D(x, HeadPositionW2S.y - 2.5), p->getPlayerModelName().c_str(), ImColor(Modules::Colors::VisibleLegendColor[0], Modules::Colors::VisibleLegendColor[1], Modules::Colors::VisibleLegendColor[2], Modules::Colors::VisibleLegendColor[3]), true, false, false);
+                    //	}
+                    //	if (p->IsHostile && !p->IsVisible && bLocalOriginW2SValid && bHeadPositionW2SValid && !p->IsDummy())
+                    //	{
+                    //		Renderer::DrawText(Canvas, Vector2D(x, HeadPositionW2S.y - 2.5), p->getPlayerModelName().c_str(), ImColor(Modules::Colors::InvisibleLegendColor[0], Modules::Colors::InvisibleLegendColor[1], Modules::Colors::InvisibleLegendColor[2], Modules::Colors::InvisibleLegendColor[3]), true, false, false);
+                    //	}
+
+
 
                         if (p->IsHostile && p->IsVisible && bLocalOriginW2SValid && bHeadPositionW2SValid && !p->IsDummy())
-						{
-							Renderer::DrawText(Canvas, Vector2D(x, HeadPositionW2S.y - 2.5), p->getPlayerModelName().c_str(), ImColor(Modules::Colors::VisibleLegendColor[0], Modules::Colors::VisibleLegendColor[1], Modules::Colors::VisibleLegendColor[2], Modules::Colors::VisibleLegendColor[3]), true, false, false);
-						}
-						if (p->IsHostile && !p->IsVisible && bLocalOriginW2SValid && bHeadPositionW2SValid && !p->IsDummy())
-						{
-							Renderer::DrawText(Canvas, Vector2D(x, HeadPositionW2S.y - 2.5), p->getPlayerModelName().c_str(), ImColor(Modules::Colors::InvisibleLegendColor[0], Modules::Colors::InvisibleLegendColor[1], Modules::Colors::InvisibleLegendColor[2], Modules::Colors::InvisibleLegendColor[3]), true, false, false);
-						}
+                        {
+                            Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(2, 0)), p->getPlayerModelName().c_str(), ImColor(Modules::Colors::VisibleLegendColor[0], Modules::Colors::VisibleLegendColor[1], Modules::Colors::VisibleLegendColor[2], Modules::Colors::VisibleLegendColor[3]), false, true, false);
+                        }
+                        if (p->IsHostile && !p->IsVisible && bLocalOriginW2SValid && bHeadPositionW2SValid && !p->IsDummy())
+                        {
+                            Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(2, 0)), p->getPlayerModelName().c_str(), ImColor(Modules::Colors::InvisibleLegendColor[0], Modules::Colors::InvisibleLegendColor[1], Modules::Colors::InvisibleLegendColor[2], Modules::Colors::InvisibleLegendColor[3]), false, true, false);
+                        }
+
 					}
 
 					// Distance
 					if (DrawDistance && bLocalOriginW2SValid && bHeadPositionW2SValid)
-					{
-					 char buffer[256];
-                     const char* dist = std::to_string((int)Conversion::ToMeters(p->DistanceToLocalPlayer)).c_str();
-                     const char* txt = "[";
-                     const char* txt2 = " M]";
+                    {
+                        if(!DrawNames)
+                        {
 
-                     strncpy(buffer, txt, sizeof(buffer));
-                     strncat(buffer, dist, sizeof(buffer));
-                     strncat(buffer, txt2, sizeof(buffer));
-                                                                           
+                           char buffer[256];
+                           const char* dist = std::to_string((int)Conversion::ToMeters(p->DistanceToLocalPlayer)).c_str();
+                           const char* txt = "[";
+                           const char* txt2 = " M]";
+                           strncpy(buffer, txt, sizeof(buffer));
+                           strncat(buffer, dist, sizeof(buffer));
+                           strncat(buffer, txt2, sizeof(buffer));
+
                         if (ShowTeam)
-						{
+                        {
                             if (!LocalOriginW2S.IsZeroVector())
-							{
-								if (p->IsAlly)
-								{
-									//Renderer::DrawText(Canvas, Vector2D(x, LocalOriginW2S.y - 10.0f), buffer, ImColor(255, 255, 255), true, false, false);
-								}
+                            {
+                                if (p->IsAlly)
+                                {
+                                    //Renderer::DrawText(Canvas, Vector2D(x, LocalOriginW2S.y - 10.0f), buffer, ImColor(255, 255, 255), true, false, false);
+                                }
                                 if (p->IsHostile  && !p->IsVisible)
                                 {
-                                    Renderer::DrawText(Canvas, Vector2D(LocalOriginW2S.x, LocalOriginW2S.y +2.f), buffer, ImColor(Modules::Colors::InvisibleDistanceColor[0], Modules::Colors::InvisibleDistanceColor[1], Modules::Colors::InvisibleDistanceColor[2], Modules::Colors::InvisibleDistanceColor[3]), true, true, false);
+                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::InvisibleDistanceColor[0], Modules::Colors::InvisibleDistanceColor[1], Modules::Colors::InvisibleDistanceColor[2], Modules::Colors::InvisibleDistanceColor[3]), false, true, false);
                                 }
                                 if (p->IsHostile  && p->IsVisible)
-								{
-                                    Renderer::DrawText(Canvas, Vector2D(LocalOriginW2S.x, LocalOriginW2S.y +2.f), buffer, ImColor(Modules::Colors::VisibleDistanceColor[0], Modules::Colors::VisibleDistanceColor[1], Modules::Colors::VisibleDistanceColor[2], Modules::Colors::VisibleDistanceColor[3]), true, true, false);
-								}
-							}
-						}
-						if (!ShowTeam)
-						{
+                                {
+                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::VisibleDistanceColor[0], Modules::Colors::VisibleDistanceColor[1], Modules::Colors::VisibleDistanceColor[2], Modules::Colors::VisibleDistanceColor[3]), false, true, false);
+                                }
+                            }
+                        }
+                        if (!ShowTeam)
+                        {
                             if (!LocalOriginW2S.IsZeroVector())
-							{
+                            {
                                 if (p->IsHostile && p->IsVisible)
-                                    Renderer::DrawText(Canvas, Vector2D(LocalOriginW2S.x, LocalOriginW2S.y +2.f), buffer, ImColor(Modules::Colors::VisibleDistanceColor[0], Modules::Colors::VisibleDistanceColor[1], Modules::Colors::VisibleDistanceColor[2], Modules::Colors::VisibleDistanceColor[3]), true, true, false);
+                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::VisibleDistanceColor[0], Modules::Colors::VisibleDistanceColor[1], Modules::Colors::VisibleDistanceColor[2], Modules::Colors::VisibleDistanceColor[3]), false, true, false);
                                 if (p->IsHostile  && !p->IsVisible)
-                                    Renderer::DrawText(Canvas, Vector2D(LocalOriginW2S.x, LocalOriginW2S.y +2.f), buffer, ImColor(Modules::Colors::InvisibleDistanceColor[0], Modules::Colors::InvisibleDistanceColor[1], Modules::Colors::InvisibleDistanceColor[2], Modules::Colors::InvisibleDistanceColor[3]), true, true, false);
+                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::InvisibleDistanceColor[0], Modules::Colors::InvisibleDistanceColor[1], Modules::Colors::InvisibleDistanceColor[2], Modules::Colors::InvisibleDistanceColor[3]), false, true, false);
 
 
-							}
-						}
-
+                            }
+                        }
+                    }
                
-					}
-
+                    }
 					// Draw Names
-					if (DrawNames && bLocalOriginW2SValid && bHeadPositionW2SValid)
+										if (DrawNames && bLocalOriginW2SValid && bHeadPositionW2SValid)
 					{
-						if (p->IsHostile && p->IsVisible && !p->IsDummy())
-						{
-							Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), p->GetPlayerName().c_str(), ImColor(Modules::Colors::VisibleNameColor[0], Modules::Colors::VisibleNameColor[1], Modules::Colors::VisibleNameColor[2], Modules::Colors::VisibleNameColor[3]), true, true, false);
-						}
-						if (p->IsHostile && !p->IsVisible && !p->IsDummy())
-						{
-							Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), p->GetPlayerName().c_str(), ImColor(Modules::Colors::InvisibleNameColor[0], Modules::Colors::InvisibleNameColor[1], Modules::Colors::InvisibleNameColor[2], Modules::Colors::InvisibleNameColor[3]), true, true, false);
-						}
 
-						// Draw Team Names
-						if (ShowTeam && TeamNames && p->IsAlly && !p->IsDummy())
-						{
-							Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), p->GetPlayerName().c_str(), ImColor(Modules::Colors::TeamNameColor[0], Modules::Colors::TeamNameColor[1], Modules::Colors::TeamNameColor[2], Modules::Colors::TeamNameColor[3]), true, true, false);
-						}
+                        if(DrawDistance) {
+                                char disttxt[256];
+                                std::string buf(p->GetPlayerName());
+
+                                const char* txt = " [";
+                                const char* dist = std::to_string((int)Conversion::ToMeters(p->DistanceToLocalPlayer)).c_str();
+                                const char* txt2 = " M]";
+
+                                strncpy(disttxt, txt, sizeof(disttxt));
+                                strncat(disttxt, dist, sizeof(disttxt));
+                                strncat(disttxt, txt2, sizeof(disttxt));
+
+                                buf.append(disttxt);
+
+                                const char* name = buf.c_str();
+
+
+                                if (p->IsHostile && p->IsVisible && !p->IsDummy())
+                                {
+                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), name, ImColor(Modules::Colors::VisibleNameColor[0], Modules::Colors::VisibleNameColor[1], Modules::Colors::VisibleNameColor[2], Modules::Colors::VisibleNameColor[3]), false, true, false);
+                                }
+                                if (p->IsHostile && !p->IsVisible && !p->IsDummy())
+                                {
+                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), name, ImColor(Modules::Colors::InvisibleNameColor[0], Modules::Colors::InvisibleNameColor[1], Modules::Colors::InvisibleNameColor[2], Modules::Colors::InvisibleNameColor[3]), false, true, false);
+                                }
+
+                                // Draw Team Names
+                                if (ShowTeam && TeamNames && p->IsAlly && !p->IsDummy())
+                                {
+                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), name, ImColor(Modules::Colors::TeamNameColor[0], Modules::Colors::TeamNameColor[1], Modules::Colors::TeamNameColor[2], Modules::Colors::TeamNameColor[3]), false, true, false);
+                                }
+
+                        }
+                        else {
+
+
+                            if (p->IsHostile && p->IsVisible && !p->IsDummy())
+                            {
+                                Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), p->GetPlayerName().c_str(), ImColor(Modules::Colors::VisibleNameColor[0], Modules::Colors::VisibleNameColor[1], Modules::Colors::VisibleNameColor[2], Modules::Colors::VisibleNameColor[3]), false, true, false);
+                            }
+                            if (p->IsHostile && !p->IsVisible && !p->IsDummy())
+                            {
+                                Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), p->GetPlayerName().c_str(), ImColor(Modules::Colors::InvisibleNameColor[0], Modules::Colors::InvisibleNameColor[1], Modules::Colors::InvisibleNameColor[2], Modules::Colors::InvisibleNameColor[3]), false, true, false);
+                            }
+
+                            // Draw Team Names
+                            if (ShowTeam && TeamNames && p->IsAlly && !p->IsDummy())
+                            {
+                                Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), p->GetPlayerName().c_str(), ImColor(Modules::Colors::TeamNameColor[0], Modules::Colors::TeamNameColor[1], Modules::Colors::TeamNameColor[2], Modules::Colors::TeamNameColor[3]), false, true, false);
+                            }
+                        }
 					}
-
 					// Draw Weapon
 					if (DrawWeapon && bLocalOriginW2SValid && bHeadPositionW2SValid)
+					{
+						if (p->IsHostile)
+						{
+							int weaponHeldID;
+							weaponHeldID = p->WeaponIndex;
+							const char *weaponHeldText = "Unknown";
+
+							ImColor weaponHeldColor;
+							weaponHeldColor = ImColor(255, 255, 255);
+
+							if (DrawWeapon && bLocalOriginW2SValid && bHeadPositionW2SValid)
 					{
 						if (p->IsHostile)
 						{
@@ -1377,10 +1444,10 @@ struct Sense
 									weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
 								}*/
 								// Melee & Grenade
-								/*if (weaponHeldID == 213) { //Thermite Grenade
+                                if (weaponHeldID == 224) { //Thermite Grenade
 									weaponHeldText = "Thermite Grenade";
-									weaponHeldColor = ThrowableWeaponColor;
-								}*/
+                                    weaponHeldColor = ImColor(Modules::Colors::ThrowableWeaponColor[0], Modules::Colors::ThrowableWeaponColor[1], Modules::Colors::ThrowableWeaponColor[2], Modules::Colors::ThrowableWeaponColor[3]);;
+                                }
 								if (p->IsHoldingGrenade)
 								{
 									weaponHeldText = "Throwable";
@@ -1393,64 +1460,58 @@ struct Sense
 								}
 							}
                                                         
-                                                        float height = HeadPositionW2S.y - LocalOriginW2S.y;
-		                         float width = height / 4.f;           
-		                         float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f ;
-				         
-					 char buffer[256];
-                                         const char* dist = std::to_string((int)Conversion::ToMeters(p->DistanceToLocalPlayer)).c_str();
-                                         const char* txt = "[";
-                                         const char* txt2 = " M]";
-                                         strncpy(buffer, txt, sizeof(buffer));
-                                         strncat(buffer, dist, sizeof(buffer));
-                                         strncat(buffer, txt2, sizeof(buffer));
+                                 //float height = HeadPositionW2S.y - LocalOriginW2S.y;
+                                 //float width = height / 4.f;
+                                 //float width2 = height / 2.0f;
+                                 //float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f;
 
 
-							if (Modules::Colors::WeaponColorMode == 1)
-							{ // Changes color to ammo type
-								if (p->IsHostile)
-								{
-									if (DrawWeapon && DrawStatus)
-									{
-										Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 20)), weaponHeldText, ImColor(weaponHeldColor), true, true, false);
-									}
 
-									if (DrawWeapon && !DrawStatus)
-									{
-										Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 0)), weaponHeldText, ImColor(weaponHeldColor), true, true, false);
-									}
-								}
-							}
-							if (Modules::Colors::WeaponColorMode == 0)
-							{ // Single Color
-							
-								if (p->IsHostile && p->IsVisible)
-								{
-									if (DrawWeapon && DrawStatus)
-									{
-										Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 20)), weaponHeldText, ImColor(Modules::Colors::VisibleWeaponColor[0], Modules::Colors::VisibleWeaponColor[1], Modules::Colors::VisibleWeaponColor[2], Modules::Colors::VisibleWeaponColor[3]), true, true, false);
-									}
 
-									if (DrawWeapon && !DrawStatus)
-									{
-										Renderer::DrawText(Canvas, Vector2D(x, LocalOriginW2S.y - 10.0f), weaponHeldText, ImColor(Modules::Colors::VisibleWeaponColor[0], Modules::Colors::VisibleWeaponColor[1], Modules::Colors::VisibleWeaponColor[2], Modules::Colors::VisibleWeaponColor[3]), true, false, false);
-									}
-								}
-								if (p->IsHostile && !p->IsVisible)
-								{
-									if (DrawWeapon && DrawStatus)
-									{
-										Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 20)), weaponHeldText, ImColor(Modules::Colors::InvisibleWeaponColor[0], Modules::Colors::InvisibleWeaponColor[1], Modules::Colors::InvisibleWeaponColor[2], Modules::Colors::InvisibleWeaponColor[3]), true, true, false);
-									}
+                            if (Modules::Colors::WeaponColorMode == 1)
+                            { // Changes color to ammo type
+                                if (p->IsHostile)
+                                {
+                                    if (DrawWeapon && ShowLegend)
+                                    {
+                                        Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 10)), weaponHeldText, ImColor(weaponHeldColor), true, true, false);
+                                    }
 
-									if (DrawWeapon && !DrawStatus)
-									{
-										Renderer::DrawText(Canvas, Vector2D(x, LocalOriginW2S.y - 10.0f), weaponHeldText, ImColor(Modules::Colors::InvisibleWeaponColor[0], Modules::Colors::InvisibleWeaponColor[1], Modules::Colors::InvisibleWeaponColor[2], Modules::Colors::InvisibleWeaponColor[3]), true, false, false);
-									}
-								}
-							}
-						}
-					}
+                                    if (DrawWeapon && !ShowLegend)
+                                    {
+                                        Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 0)), weaponHeldText, ImColor(weaponHeldColor), true, true, false);
+                                    }
+                                }
+                            }
+                            if (Modules::Colors::WeaponColorMode == 0)
+                            { // Single Color
+                                if (p->IsHostile && p->IsVisible)
+                                {
+                                    if (DrawWeapon && ShowLegend)
+                                    {
+                                        Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 10)), weaponHeldText, ImColor(Modules::Colors::VisibleWeaponColor[0], Modules::Colors::VisibleWeaponColor[1], Modules::Colors::VisibleWeaponColor[2], Modules::Colors::VisibleWeaponColor[3]), false, true, false);
+                                    }
+
+                                    if (DrawWeapon && !ShowLegend)
+                                    {
+                                        Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 0)), weaponHeldText, ImColor(Modules::Colors::VisibleWeaponColor[0], Modules::Colors::VisibleWeaponColor[1], Modules::Colors::VisibleWeaponColor[2], Modules::Colors::VisibleWeaponColor[3]), false, true, false);
+                                    }
+                                }
+                                if (p->IsHostile && !p->IsVisible)
+                                {
+                                    if (DrawWeapon && ShowLegend)
+                                    {
+                                        Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 10)), weaponHeldText, ImColor(Modules::Colors::InvisibleWeaponColor[0], Modules::Colors::InvisibleWeaponColor[1], Modules::Colors::InvisibleWeaponColor[2], Modules::Colors::InvisibleWeaponColor[3]), false, true, false);
+                                    }
+
+                                    if (DrawWeapon && !ShowLegend)
+                                    {
+                                        Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 0)), weaponHeldText, ImColor(Modules::Colors::InvisibleWeaponColor[0], Modules::Colors::InvisibleWeaponColor[1], Modules::Colors::InvisibleWeaponColor[2], Modules::Colors::InvisibleWeaponColor[3]), false, true, false);
+                                    }
+                                }
+                            }
+                        }
+                    }
 
 					/*bool TestWeaponID = false; //For finding weapon IDs (Used for finding melee ID)
 					if (TestWeaponID && bLocalOriginW2SValid && bHeadPositionW2SValid) {
@@ -1498,6 +1559,32 @@ struct Sense
 							
 						}
 					}
+
+					if (drawlvl && p->IsHostile)
+                    {
+                    if(p->IsDummy()) continue;
+
+
+                    char buffer[256];
+                    std::string lvl = std::to_string(p->GetPlayerLevel());
+                    const char* lvltxt = lvl.c_str();
+                    const char* txt = "[LvL: ";
+                    const char* txt2 = "]";
+
+                    strncpy(buffer, txt, sizeof(buffer));
+                    strncat(buffer, lvltxt, sizeof(buffer));
+                    strncat(buffer, txt2, sizeof(buffer));
+
+                    float height = HeadPositionW2S.y - LocalOriginW2S.y;
+                    float width = height / 4.f;
+                    float y = LocalOriginW2S.y + (height / 2) - 6;
+                    float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f;
+                    //Vector2D(LocalOriginW2S.x, LocalOriginW2S.y +2.f) Vector2D(x, HeadPositionW2S.y - 3.f)
+                    Renderer::DrawText(Canvas, Vector2D(x, y), buffer, ImColor(255,255,255), false, false, false);
+
+
+                    }
+		
 
 					// Draw Skeleton
 					if (Skeleton && bLocalOriginW2SValid && bHeadPositionW2SValid)
