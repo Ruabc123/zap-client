@@ -863,6 +863,7 @@ float SkeletonThickness = 1.0;
 
 bool HealthBar = true;
 bool ShieldBar = true;
+bool drawlvl = true;
 
 int BarMode = 2;
 int BarStyle = 0;
@@ -1841,7 +1842,7 @@ void UpdateConfig() {
         WritePair(Glow, GlowRadius);
         WritePair(Glow, InsideFunction);
         WritePair(Glow, OutlineFunction);
-        WritePair(Glow, BodyStyle);
+        WritePair(Glow, BodyStyle);    
         WritePair(Glow, OutlineStyle);
         WritePair(Glow, InvisibleGlowColorR);
         WritePair(Glow, InvisibleGlowColorG);
@@ -1875,6 +1876,7 @@ void UpdateConfig() {
         WritePair(Sense, SkeletonThickness);
         WritePair(Sense, HealthBar);
         WritePair(Sense, ShieldBar);
+        WritePair(Sense, drawlvl);
         WritePair(Sense, BarMode);
         WritePair(Sense, BarStyle);
         WritePair(Sense, BarColorMode);
@@ -2875,6 +2877,8 @@ bool ReadConfig(const std::string &configFile) {
     ReadFloat(Sense, SkeletonThickness);
     ReadBool(Sense, HealthBar);
     ReadBool(Sense, ShieldBar);
+    ReadBool(Sense, drawlvl);
+
     ReadInt(Sense, BarMode);
     ReadInt(Sense, BarStyle);
     ReadInt(Sense, BarColorMode);
