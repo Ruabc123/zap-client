@@ -284,9 +284,9 @@ struct Sense
 						ImGui::SetTooltip("Adds their max health and max armor at the end.");
 				}
 
-				 ImGui::Checkbox("Draw Level", &drawlvl);
-                		 if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                   		 	ImGui::SetTooltip("Show What Level The Enemy Is.");
+                ImGui::Checkbox("Draw Level", &drawlvl);
+                if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                    ImGui::SetTooltip("Show What Level The Enemy Is.");
 
 				ImGui::Checkbox("Draw Legend", &ShowLegend);
 				if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
@@ -1156,92 +1156,91 @@ struct Sense
 					}
 
 					// Distance
-					if (DrawDistance && bLocalOriginW2SValid && bHeadPositionW2SValid)
+                    if (DrawDistance && bLocalOriginW2SValid && bHeadPositionW2SValid)
                     {
                         if(!DrawNames)
                         {
 
-                           char buffer[256];
-                           const char* dist = std::to_string((int)Conversion::ToMeters(p->DistanceToLocalPlayer)).c_str();
-                           const char* txt = "[";
-                           const char* txt2 = " M]";
-                           strncpy(buffer, txt, sizeof(buffer));
-                           strncat(buffer, dist, sizeof(buffer));
-                           strncat(buffer, txt2, sizeof(buffer));
+                            char buffer[256];
+                            const char* dist = std::to_string((int)Conversion::ToMeters(p->DistanceToLocalPlayer)).c_str();
+                            const char* txt = "[";
+                            const char* txt2 = " M]";
+                            strncpy(buffer, txt, sizeof(buffer));
+                            strncat(buffer, dist, sizeof(buffer));
+                            strncat(buffer, txt2, sizeof(buffer));
 
-                        if (ShowTeam)
-                        {
-                            if (!LocalOriginW2S.IsZeroVector())
+                            if (ShowTeam)
                             {
-                                if (p->IsAlly)
+                                if (!LocalOriginW2S.IsZeroVector())
                                 {
-                                    //Renderer::DrawText(Canvas, Vector2D(x, LocalOriginW2S.y - 10.0f), buffer, ImColor(255, 255, 255), true, false, false);
+                                    if (p->IsAlly)
+                                    {
+                                        //Renderer::DrawText(Canvas, Vector2D(x, LocalOriginW2S.y - 10.0f), buffer, ImColor(255, 255, 255), true, false, false);
+                                    }
+                                    if (p->IsHostile  && !p->IsVisible)
+                                    {
+                                        Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::InvisibleDistanceColor[0], Modules::Colors::InvisibleDistanceColor[1], Modules::Colors::InvisibleDistanceColor[2], Modules::Colors::InvisibleDistanceColor[3]), false, true, false);
+                                    }
+                                    if (p->IsHostile  && p->IsVisible)
+                                    {
+                                        Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::VisibleDistanceColor[0], Modules::Colors::VisibleDistanceColor[1], Modules::Colors::VisibleDistanceColor[2], Modules::Colors::VisibleDistanceColor[3]), false, true, false);
+                                    }
                                 }
-                                if (p->IsHostile  && !p->IsVisible)
+                            }
+                            if (!ShowTeam)
+                            {
+                                if (!LocalOriginW2S.IsZeroVector())
                                 {
-                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::InvisibleDistanceColor[0], Modules::Colors::InvisibleDistanceColor[1], Modules::Colors::InvisibleDistanceColor[2], Modules::Colors::InvisibleDistanceColor[3]), false, true, false);
-                                }
-                                if (p->IsHostile  && p->IsVisible)
-                                {
-                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::VisibleDistanceColor[0], Modules::Colors::VisibleDistanceColor[1], Modules::Colors::VisibleDistanceColor[2], Modules::Colors::VisibleDistanceColor[3]), false, true, false);
+                                    if (p->IsHostile && p->IsVisible)
+                                        Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::VisibleDistanceColor[0], Modules::Colors::VisibleDistanceColor[1], Modules::Colors::VisibleDistanceColor[2], Modules::Colors::VisibleDistanceColor[3]), false, true, false);
+                                    if (p->IsHostile  && !p->IsVisible)
+                                        Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::InvisibleDistanceColor[0], Modules::Colors::InvisibleDistanceColor[1], Modules::Colors::InvisibleDistanceColor[2], Modules::Colors::InvisibleDistanceColor[3]), false, true, false);
+
+
                                 }
                             }
                         }
-                        if (!ShowTeam)
-                        {
-                            if (!LocalOriginW2S.IsZeroVector())
-                            {
-                                if (p->IsHostile && p->IsVisible)
-                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::VisibleDistanceColor[0], Modules::Colors::VisibleDistanceColor[1], Modules::Colors::VisibleDistanceColor[2], Modules::Colors::VisibleDistanceColor[3]), false, true, false);
-                                if (p->IsHostile  && !p->IsVisible)
-                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), buffer, ImColor(Modules::Colors::InvisibleDistanceColor[0], Modules::Colors::InvisibleDistanceColor[1], Modules::Colors::InvisibleDistanceColor[2], Modules::Colors::InvisibleDistanceColor[3]), false, true, false);
 
-
-                            }
-                        }
-                    }
-               
                     }
 					// Draw Names
-										if (DrawNames && bLocalOriginW2SValid && bHeadPositionW2SValid)
-					{
+                    if (DrawNames && bLocalOriginW2SValid && bHeadPositionW2SValid)
+                    {
 
-                        if(DrawDistance) {
-                                char disttxt[256];
-                                std::string buf(p->GetPlayerName());
+                        if(DrawDistance)
+                        {
+                            char disttxt[256];
+                            std::string buf(p->GetPlayerName());
 
-                                const char* txt = " [";
-                                const char* dist = std::to_string((int)Conversion::ToMeters(p->DistanceToLocalPlayer)).c_str();
-                                const char* txt2 = " M]";
+                            const char* txt = " [";
+                            const char* dist = std::to_string((int)Conversion::ToMeters(p->DistanceToLocalPlayer)).c_str();
+                            const char* txt2 = " M]";
 
-                                strncpy(disttxt, txt, sizeof(disttxt));
-                                strncat(disttxt, dist, sizeof(disttxt));
-                                strncat(disttxt, txt2, sizeof(disttxt));
+                            strncpy(disttxt, txt, sizeof(disttxt));
+                            strncat(disttxt, dist, sizeof(disttxt));
+                            strncat(disttxt, txt2, sizeof(disttxt));
 
-                                buf.append(disttxt);
+                            buf.append(disttxt);
 
-                                const char* name = buf.c_str();
+                            const char* name = buf.c_str();
 
 
-                                if (p->IsHostile && p->IsVisible && !p->IsDummy())
-                                {
-                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), name, ImColor(Modules::Colors::VisibleNameColor[0], Modules::Colors::VisibleNameColor[1], Modules::Colors::VisibleNameColor[2], Modules::Colors::VisibleNameColor[3]), false, true, false);
-                                }
-                                if (p->IsHostile && !p->IsVisible && !p->IsDummy())
-                                {
-                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), name, ImColor(Modules::Colors::InvisibleNameColor[0], Modules::Colors::InvisibleNameColor[1], Modules::Colors::InvisibleNameColor[2], Modules::Colors::InvisibleNameColor[3]), false, true, false);
-                                }
+                            if (p->IsHostile && p->IsVisible && !p->IsDummy())
+                            {
+                                Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), name, ImColor(Modules::Colors::VisibleNameColor[0], Modules::Colors::VisibleNameColor[1], Modules::Colors::VisibleNameColor[2], Modules::Colors::VisibleNameColor[3]), false, true, false);
+                            }
+                            if (p->IsHostile && !p->IsVisible && !p->IsDummy())
+                            {
+                                Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), name, ImColor(Modules::Colors::InvisibleNameColor[0], Modules::Colors::InvisibleNameColor[1], Modules::Colors::InvisibleNameColor[2], Modules::Colors::InvisibleNameColor[3]), false, true, false);
+                            }
 
-                                // Draw Team Names
-                                if (ShowTeam && TeamNames && p->IsAlly && !p->IsDummy())
-                                {
-                                    Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), name, ImColor(Modules::Colors::TeamNameColor[0], Modules::Colors::TeamNameColor[1], Modules::Colors::TeamNameColor[2], Modules::Colors::TeamNameColor[3]), false, true, false);
-                                }
-
+                            // Draw Team Names
+                            if (ShowTeam && TeamNames && p->IsAlly && !p->IsDummy())
+                            {
+                                Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), name, ImColor(Modules::Colors::TeamNameColor[0], Modules::Colors::TeamNameColor[1], Modules::Colors::TeamNameColor[2], Modules::Colors::TeamNameColor[3]), false, true, false);
+                            }
                         }
-                        else {
-
-
+                        else
+                        {
                             if (p->IsHostile && p->IsVisible && !p->IsDummy())
                             {
                                 Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), p->GetPlayerName().c_str(), ImColor(Modules::Colors::VisibleNameColor[0], Modules::Colors::VisibleNameColor[1], Modules::Colors::VisibleNameColor[2], Modules::Colors::VisibleNameColor[3]), false, true, false);
@@ -1257,213 +1256,202 @@ struct Sense
                                 Renderer::DrawText(Canvas, HeadPositionW2S.Subtract(Vector2D(0, 12)), p->GetPlayerName().c_str(), ImColor(Modules::Colors::TeamNameColor[0], Modules::Colors::TeamNameColor[1], Modules::Colors::TeamNameColor[2], Modules::Colors::TeamNameColor[3]), false, true, false);
                             }
                         }
-					}
+                    }
 					// Draw Weapon
-					if (DrawWeapon && bLocalOriginW2SValid && bHeadPositionW2SValid)
-					{
-						if (p->IsHostile)
-						{
-							int weaponHeldID;
-							weaponHeldID = p->WeaponIndex;
-							const char *weaponHeldText = "Unknown";
+                    if (DrawWeapon && bLocalOriginW2SValid && bHeadPositionW2SValid)
+                    {
+                        if (p->IsHostile)
+                        {
+                            int weaponHeldID;
+                            weaponHeldID = p->WeaponIndex;
+                            const char *weaponHeldText = "Unknown";
 
-							ImColor weaponHeldColor;
-							weaponHeldColor = ImColor(255, 255, 255);
+                            ImColor weaponHeldColor;
+                            weaponHeldColor = ImColor(255, 255, 255);
 
-							if (DrawWeapon && bLocalOriginW2SValid && bHeadPositionW2SValid)
-					{
-						if (p->IsHostile)
-						{
-							int weaponHeldID;
-							weaponHeldID = p->WeaponIndex;
-							const char *weaponHeldText = "Unknown";
-
-							ImColor weaponHeldColor;
-							weaponHeldColor = ImColor(255, 255, 255);
-
-							if (DrawWeapon)
-							{
-								// Light Weapons
-								if (weaponHeldID == 106)
-								{ // P2020
-									weaponHeldText = "P2020";
-									weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
-								}
-								if (weaponHeldID == 81)
-								{ // RE-45
-									weaponHeldText = "RE-45";
-									weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
-								}
-								if (weaponHeldID == 80)
-								{ // Alternator
-									weaponHeldText = "Alternator";
-									weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
-								}
-								if (weaponHeldID == 105)
-								{ // R-99
-									weaponHeldText = "R-99";
-									weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
-								}
-								if (weaponHeldID == 0)
-								{ // R-301
-									weaponHeldText = "R-301";
-									weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
-								}
-								if (weaponHeldID == 107)
-								{ // Spitfire
-									weaponHeldText = "Spitfire";
-									weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
-								}
-								if (weaponHeldID == 90)
-								{ // G7
-									weaponHeldText = "G7 Scout";
-									weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
-								}
-								// Heavy Weapons
-								if (weaponHeldID == 113)
-								{ // CARSMG
-									weaponHeldText = "CAR SMG";
-									weaponHeldColor = ImColor(Modules::Colors::HeavyWeaponColor[0], Modules::Colors::HeavyWeaponColor[1], Modules::Colors::HeavyWeaponColor[2], Modules::Colors::HeavyWeaponColor[3]);
-								}
-								if (weaponHeldID == 21)
-								{ // Rampage
-									weaponHeldText = "Rampage";
-									weaponHeldColor = ImColor(Modules::Colors::HeavyWeaponColor[0], Modules::Colors::HeavyWeaponColor[1], Modules::Colors::HeavyWeaponColor[2], Modules::Colors::HeavyWeaponColor[3]);
-								}
-								if (weaponHeldID == 112)
-								{ // Repeater
-									weaponHeldText = "Repeater";
-									weaponHeldColor = ImColor(Modules::Colors::HeavyWeaponColor[0], Modules::Colors::HeavyWeaponColor[1], Modules::Colors::HeavyWeaponColor[2], Modules::Colors::HeavyWeaponColor[3]);
-								}
-								if (weaponHeldID == 91)
-								{ // Hemlock
-									weaponHeldText = "Hemlock";
-									weaponHeldColor = ImColor(Modules::Colors::HeavyWeaponColor[0], Modules::Colors::HeavyWeaponColor[1], Modules::Colors::HeavyWeaponColor[2], Modules::Colors::HeavyWeaponColor[3]);
-								}
-								if (weaponHeldID == 89)
-								{ // Flatline
-									weaponHeldText = "Flatline";
-									weaponHeldColor = ImColor(Modules::Colors::HeavyWeaponColor[0], Modules::Colors::HeavyWeaponColor[1], Modules::Colors::HeavyWeaponColor[2], Modules::Colors::HeavyWeaponColor[3]);
-								}
-								// Energy Weapons
-								if (weaponHeldID == 114)
-								{ // Nemesis
-									weaponHeldText = "Nemesis";
-									weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
-								}
-								if (weaponHeldID == 111)
-								{ // Volt
-									weaponHeldText = "Volt";
-									weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
-								}
-								if (weaponHeldID == 108)
-								{ // TripleTake
-									weaponHeldText = "Triple Take";
-									weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
-								}
-								if (weaponHeldID == 94)
-								{ // LSTAR
-									weaponHeldText = "L-STAR";
-									weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
-								}
-								if (weaponHeldID == 84)
-								{ // Devotion
-									weaponHeldText = "Devotion";
-									weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
-								}
-								if (weaponHeldID == 86)
-								{ // Havoc
-									weaponHeldText = "Havoc";
-									weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
-								}
-								// Shotguns
-								if (weaponHeldID == 97)
-								{ // Mozambique
-									weaponHeldText = "Mozambique";
-									weaponHeldColor = ImColor(Modules::Colors::ShotgunWeaponColor[0], Modules::Colors::ShotgunWeaponColor[1], Modules::Colors::ShotgunWeaponColor[2], Modules::Colors::ShotgunWeaponColor[3]);
-								}
-								if (weaponHeldID == 88)
-								{ // EVA8
-									weaponHeldText = "EVA-8 Auto";
-									weaponHeldColor = ImColor(Modules::Colors::ShotgunWeaponColor[0], Modules::Colors::ShotgunWeaponColor[1], Modules::Colors::ShotgunWeaponColor[2], Modules::Colors::ShotgunWeaponColor[3]);
-								}
-								if (weaponHeldID == 104)
-								{ // Peacekeeper
-									weaponHeldText = "Peacekeeper";
-									weaponHeldColor = ImColor(Modules::Colors::ShotgunWeaponColor[0], Modules::Colors::ShotgunWeaponColor[1], Modules::Colors::ShotgunWeaponColor[2], Modules::Colors::ShotgunWeaponColor[3]);
-								}
-								if (weaponHeldID == 96)
-								{ // Mastiff
-									weaponHeldText = "Mastiff";
-									weaponHeldColor = ImColor(Modules::Colors::ShotgunWeaponColor[0], Modules::Colors::ShotgunWeaponColor[1], Modules::Colors::ShotgunWeaponColor[2], Modules::Colors::ShotgunWeaponColor[3]);
-								}
-								// Snipers
-								if (weaponHeldID == 1)
-								{ // Sentinel
-									weaponHeldText = "Sentinel";
-									weaponHeldColor = ImColor(Modules::Colors::SniperWeaponColor[0], Modules::Colors::SniperWeaponColor[1], Modules::Colors::SniperWeaponColor[2], Modules::Colors::SniperWeaponColor[3]);
-								}
-								if (weaponHeldID == 83)
-								{ // ChargeRifle
-									weaponHeldText = "Charge Rifle";
-									weaponHeldColor = ImColor(Modules::Colors::SniperWeaponColor[0], Modules::Colors::SniperWeaponColor[1], Modules::Colors::SniperWeaponColor[2], Modules::Colors::SniperWeaponColor[3]);
-								}
-								if (weaponHeldID == 85)
-								{ // Longbow
-									weaponHeldText = "Longbow";
-									weaponHeldColor = ImColor(Modules::Colors::SniperWeaponColor[0], Modules::Colors::SniperWeaponColor[1], Modules::Colors::SniperWeaponColor[2], Modules::Colors::SniperWeaponColor[3]);
-								}
-								// Legendary Weapons
-								if (weaponHeldID == 110)
-								{ // Wingman
-									weaponHeldText = "Wingman";
-									weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
-								}
-								if (weaponHeldID == 102)
-								{ // Prowler
-									weaponHeldText = "Prowler";
-									weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
-								}
-								if (weaponHeldID == 2)
-								{ // Bocek
-									weaponHeldText = "Bocek";
-									weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
-								}
-								if (weaponHeldID == 92)
-								{ // Kraber
-									weaponHeldText = "Kraber";
-									weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
-								}
-								if (weaponHeldID == 166)
-								{ // Knife
-									weaponHeldText = "Throwing Knife";
-									weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
-								}
-								/*if (weaponHeldID == 3) { //BusterSword
-									weaponHeldText = "Buster Sword";
-									weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
-								}*/
-								// Melee & Grenade
+                            if (DrawWeapon)
+                            {
+                                // Light Weapons
+                                if (weaponHeldID == 106)
+                                { // P2020
+                                    weaponHeldText = "P2020";
+                                    weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 81)
+                                { // RE-45
+                                    weaponHeldText = "RE-45";
+                                    weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 80)
+                                { // Alternator
+                                    weaponHeldText = "Alternator";
+                                    weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 105)
+                                { // R-99
+                                    weaponHeldText = "R-99";
+                                    weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 0)
+                                { // R-301
+                                    weaponHeldText = "R-301";
+                                    weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 107)
+                                { // Spitfire
+                                    weaponHeldText = "Spitfire";
+                                    weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 90)
+                                { // G7
+                                    weaponHeldText = "G7 Scout";
+                                    weaponHeldColor = ImColor(Modules::Colors::LightWeaponColor[0], Modules::Colors::LightWeaponColor[1], Modules::Colors::LightWeaponColor[2], Modules::Colors::LightWeaponColor[3]);
+                                }
+                                // Heavy Weapons
+                                if (weaponHeldID == 113)
+                                { // CARSMG
+                                    weaponHeldText = "CAR SMG";
+                                    weaponHeldColor = ImColor(Modules::Colors::HeavyWeaponColor[0], Modules::Colors::HeavyWeaponColor[1], Modules::Colors::HeavyWeaponColor[2], Modules::Colors::HeavyWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 21)
+                                { // Rampage
+                                    weaponHeldText = "Rampage";
+                                    weaponHeldColor = ImColor(Modules::Colors::HeavyWeaponColor[0], Modules::Colors::HeavyWeaponColor[1], Modules::Colors::HeavyWeaponColor[2], Modules::Colors::HeavyWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 112)
+                                { // Repeater
+                                    weaponHeldText = "Repeater";
+                                    weaponHeldColor = ImColor(Modules::Colors::HeavyWeaponColor[0], Modules::Colors::HeavyWeaponColor[1], Modules::Colors::HeavyWeaponColor[2], Modules::Colors::HeavyWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 91)
+                                { // Hemlock
+                                    weaponHeldText = "Hemlock";
+                                    weaponHeldColor = ImColor(Modules::Colors::HeavyWeaponColor[0], Modules::Colors::HeavyWeaponColor[1], Modules::Colors::HeavyWeaponColor[2], Modules::Colors::HeavyWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 89)
+                                { // Flatline
+                                    weaponHeldText = "Flatline";
+                                    weaponHeldColor = ImColor(Modules::Colors::HeavyWeaponColor[0], Modules::Colors::HeavyWeaponColor[1], Modules::Colors::HeavyWeaponColor[2], Modules::Colors::HeavyWeaponColor[3]);
+                                }
+                                // Energy Weapons
+                                if (weaponHeldID == 114)
+                                { // Nemesis
+                                    weaponHeldText = "Nemesis";
+                                    weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 111)
+                                { // Volt
+                                    weaponHeldText = "Volt";
+                                    weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 108)
+                                { // TripleTake
+                                    weaponHeldText = "Triple Take";
+                                    weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 94)
+                                { // LSTAR
+                                    weaponHeldText = "L-STAR";
+                                    weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 84)
+                                { // Devotion
+                                    weaponHeldText = "Devotion";
+                                    weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 86)
+                                { // Havoc
+                                    weaponHeldText = "Havoc";
+                                    weaponHeldColor = ImColor(Modules::Colors::EnergyWeaponColor[0], Modules::Colors::EnergyWeaponColor[1], Modules::Colors::EnergyWeaponColor[2], Modules::Colors::EnergyWeaponColor[3]);
+                                }
+                                // Shotguns
+                                if (weaponHeldID == 97)
+                                { // Mozambique
+                                    weaponHeldText = "Mozambique";
+                                    weaponHeldColor = ImColor(Modules::Colors::ShotgunWeaponColor[0], Modules::Colors::ShotgunWeaponColor[1], Modules::Colors::ShotgunWeaponColor[2], Modules::Colors::ShotgunWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 88)
+                                { // EVA8
+                                    weaponHeldText = "EVA-8 Auto";
+                                    weaponHeldColor = ImColor(Modules::Colors::ShotgunWeaponColor[0], Modules::Colors::ShotgunWeaponColor[1], Modules::Colors::ShotgunWeaponColor[2], Modules::Colors::ShotgunWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 104)
+                                { // Peacekeeper
+                                    weaponHeldText = "Peacekeeper";
+                                    weaponHeldColor = ImColor(Modules::Colors::ShotgunWeaponColor[0], Modules::Colors::ShotgunWeaponColor[1], Modules::Colors::ShotgunWeaponColor[2], Modules::Colors::ShotgunWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 96)
+                                { // Mastiff
+                                    weaponHeldText = "Mastiff";
+                                    weaponHeldColor = ImColor(Modules::Colors::ShotgunWeaponColor[0], Modules::Colors::ShotgunWeaponColor[1], Modules::Colors::ShotgunWeaponColor[2], Modules::Colors::ShotgunWeaponColor[3]);
+                                }
+                                // Snipers
+                                if (weaponHeldID == 1)
+                                { // Sentinel
+                                    weaponHeldText = "Sentinel";
+                                    weaponHeldColor = ImColor(Modules::Colors::SniperWeaponColor[0], Modules::Colors::SniperWeaponColor[1], Modules::Colors::SniperWeaponColor[2], Modules::Colors::SniperWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 83)
+                                { // ChargeRifle
+                                    weaponHeldText = "Charge Rifle";
+                                    weaponHeldColor = ImColor(Modules::Colors::SniperWeaponColor[0], Modules::Colors::SniperWeaponColor[1], Modules::Colors::SniperWeaponColor[2], Modules::Colors::SniperWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 85)
+                                { // Longbow
+                                    weaponHeldText = "Longbow";
+                                    weaponHeldColor = ImColor(Modules::Colors::SniperWeaponColor[0], Modules::Colors::SniperWeaponColor[1], Modules::Colors::SniperWeaponColor[2], Modules::Colors::SniperWeaponColor[3]);
+                                }
+                                // Legendary Weapons
+                                if (weaponHeldID == 110)
+                                { // Wingman
+                                    weaponHeldText = "Wingman";
+                                    weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 102)
+                                { // Prowler
+                                    weaponHeldText = "Prowler";
+                                    weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 2)
+                                { // Bocek
+                                    weaponHeldText = "Bocek";
+                                    weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 92)
+                                { // Kraber
+                                    weaponHeldText = "Kraber";
+                                    weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 166)
+                                { // Knife
+                                    weaponHeldText = "Throwing Knife";
+                                    weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
+                                }
+                                /*if (weaponHeldID == 3) { //BusterSword
+                                    weaponHeldText = "Buster Sword";
+                                    weaponHeldColor = ImColor(Modules::Colors::LegendaryWeaponColor[0], Modules::Colors::LegendaryWeaponColor[1], Modules::Colors::LegendaryWeaponColor[2], Modules::Colors::LegendaryWeaponColor[3]);
+                                }*/
+                                // Melee & Grenade
                                 if (weaponHeldID == 224) { //Thermite Grenade
-									weaponHeldText = "Thermite Grenade";
+                                    weaponHeldText = "Thermite Grenade";
                                     weaponHeldColor = ImColor(Modules::Colors::ThrowableWeaponColor[0], Modules::Colors::ThrowableWeaponColor[1], Modules::Colors::ThrowableWeaponColor[2], Modules::Colors::ThrowableWeaponColor[3]);;
                                 }
-								if (p->IsHoldingGrenade)
-								{
-									weaponHeldText = "Throwable";
-									weaponHeldColor = ImColor(Modules::Colors::ThrowableWeaponColor[0], Modules::Colors::ThrowableWeaponColor[1], Modules::Colors::ThrowableWeaponColor[2], Modules::Colors::ThrowableWeaponColor[3]);
-								}
-								if (weaponHeldID == 115)
-								{ // Melee
-									weaponHeldText = "Melee";
-									weaponHeldColor = ImColor(Modules::Colors::MeleeWeaponColor[0], Modules::Colors::MeleeWeaponColor[1], Modules::Colors::MeleeWeaponColor[2], Modules::Colors::MeleeWeaponColor[3]);
-								}
-							}
-                                                        
-                                 //float height = HeadPositionW2S.y - LocalOriginW2S.y;
-                                 //float width = height / 4.f;
-                                 //float width2 = height / 2.0f;
-                                 //float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f;
+                                if (p->IsHoldingGrenade)
+                                {
+                                    weaponHeldText = "Throwable";
+                                    weaponHeldColor = ImColor(Modules::Colors::ThrowableWeaponColor[0], Modules::Colors::ThrowableWeaponColor[1], Modules::Colors::ThrowableWeaponColor[2], Modules::Colors::ThrowableWeaponColor[3]);
+                                }
+                                if (weaponHeldID == 115)
+                                { // Melee
+                                    weaponHeldText = "Melee";
+                                    weaponHeldColor = ImColor(Modules::Colors::MeleeWeaponColor[0], Modules::Colors::MeleeWeaponColor[1], Modules::Colors::MeleeWeaponColor[2], Modules::Colors::MeleeWeaponColor[3]);
+                                }
+                            }
+
+                            //float height = HeadPositionW2S.y - LocalOriginW2S.y;
+                            //float width = height / 4.f;
+                            //float width2 = height / 2.0f;
+                            //float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f;
 
 
 
@@ -1472,12 +1460,12 @@ struct Sense
                             { // Changes color to ammo type
                                 if (p->IsHostile)
                                 {
-                                    if (DrawWeapon && ShowLegend)
+                                    if (DrawWeapon && DrawStatus)
                                     {
                                         Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 10)), weaponHeldText, ImColor(weaponHeldColor), true, true, false);
                                     }
 
-                                    if (DrawWeapon && !ShowLegend)
+                                    if (DrawWeapon && !DrawStatus)
                                     {
                                         Renderer::DrawText(Canvas, LocalOriginW2S.Add(Vector2D(0, 0)), weaponHeldText, ImColor(weaponHeldColor), true, true, false);
                                     }
