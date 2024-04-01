@@ -1864,8 +1864,8 @@ void SuperGlideThreadRun()
         static float traversalProgressTmp = 0.0;
 
         float worldtime = Memory::Read<float>(Myself->BasePointer + OFF_TIME_BASE); // Current time
-        float traversalStartTime = Memory::Read<float>(Myself->BasePointer + OFFSET_TRAVERSAL_START_TIME); // Time to start wall climbing
-        float traversalProgress = Memory::Read<float>(Myself->BasePointer + OFFSET_TRAVERSAL_PROGRESS); // Wall climbing, if > 0.87 it is almost over.
+        float traversalStartTime = Memory::Read<float>(Myself->BasePointer + OFF_TRAVERSAL_PROGRESS); // Time to start wall climbing
+        float traversalProgress = Memory::Read<float>(Myself->BasePointer + OFF_TRAVERSAL_PROGRESS); // Wall climbing, if > 0.87 it is almost over.
         float HangOnWall = -(traversalStartTime - worldtime);
 
         if (HangOnWall > 0.1 && HangOnWall < 0.12)
