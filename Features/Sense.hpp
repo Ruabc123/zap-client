@@ -1192,30 +1192,29 @@ struct Sense {
 					Renderer::DrawText(Canvas, WeaponPosition, WeaponHeldText.c_str(), WeaponColor, Features::Sense::TextOutline, true, false);
 			}
 
-			if (DrawLevel && p->IsHostile && DrawNames)
-            {
-                if(p->IsDummy()) continue;
+			if (DrawLevel && DrawNames) {
+                		if(p->IsDummy()) continue;
 
 
-                char buffer[256];
-                std::string lvl = std::to_string(p->GetPlayerLevel());
-                const char* lvltxt = lvl.c_str();
-                const char* txt = "[LvL: ";
-                const char* txt2 = "]";
+                		char buffer[256];
+                		std::string lvl = std::to_string(p->GetPlayerLevel());
+                		const char* lvltxt = lvl.c_str();
+                		const char* txt = "[LvL: ";
+                		const char* txt2 = "]";
 
-                strncpy(buffer, txt, sizeof(buffer));
-                strncat(buffer, lvltxt, sizeof(buffer));
-                strncat(buffer, txt2, sizeof(buffer));
+                		strncpy(buffer, txt, sizeof(buffer));
+                		strncat(buffer, lvltxt, sizeof(buffer));
+                		strncat(buffer, txt2, sizeof(buffer));
 
-                float height = HeadPositionW2S.y - LocalOriginW2S.y;
-                float width = height / 4.f;
-                float y = LocalOriginW2S.y + (height / 2) - 6;
-                float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f;
-                //Vector2D(LocalOriginW2S.x, LocalOriginW2S.y +2.f) Vector2D(x, HeadPositionW2S.y - 3.f)
-                Renderer::DrawText(Canvas, Vector2D(x, y), buffer, ImColor(255,255,255), Features::Sense::TextOutline, false, false);  //TODO: make option for this 2 be in diffrent locations around the box, currently it sits roughly half way up the right side of the players box
+                		float height = HeadPositionW2S.y - LocalOriginW2S.y;
+                		float width = height / 4.f;
+                		float y = LocalOriginW2S.y + (height / 2) - 6;
+                		float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f;
+                		//Vector2D(LocalOriginW2S.x, LocalOriginW2S.y +2.f) Vector2D(x, HeadPositionW2S.y - 3.f)
+                		Renderer::DrawText(Canvas, Vector2D(x, y), buffer, ImColor(255,255,255), Features::Sense::TextOutline, false, false);  //TODO: make option for this 2 be in diffrent locations around the box, currently it sits roughly half way up the right side of the players box
 
 
-            }
+            		}
 			
 			if (DrawStatus) {
 				std::stringstream healthValue, shieldValue, maxHealthValue, maxShieldValue;
