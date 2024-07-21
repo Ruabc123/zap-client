@@ -1845,6 +1845,10 @@ struct Menu
 					if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
 						ImGui::SetTooltip("Show how far away the enemies are");
 
+					ImGui::Checkbox("Draw Level", &Features::Sense::Enemy::DrawLevel);
+                    			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                        			ImGui::SetTooltip("Show the enemies level");
+
 					ImGui::Checkbox("Draw Legend", &Features::Sense::Enemy::DrawLegend);
 					if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
 						ImGui::SetTooltip("Show What Legend The Enemy Is Playing As.");
