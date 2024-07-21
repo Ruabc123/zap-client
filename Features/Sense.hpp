@@ -1209,7 +1209,7 @@ struct Sense {
                 		float y = LocalOriginW2S.y + (height / 2) - 6;
                 		float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f;
                 		//Vector2D(LocalOriginW2S.x, LocalOriginW2S.y +2.f) Vector2D(x, HeadPositionW2S.y - 3.f)
-                		Renderer::DrawText(Canvas, Vector2D(x, y), buffer, ImColor(255,255,255), Features::Sense::TextOutline, false, false);  //TODO: make option for this 2 be in diffrent locations around the box, currently it sits roughly half way up the right side of the players box
+                		Renderer::DrawText(Canvas, Vector2D(x, y), buffer,  ImColor(NameColor), Features::Sense::TextOutline, false, false);  //TODO: make option for this 2 be in diffrent locations around the box, currently it sits roughly half way up the right side of the players box
             		}
 			
 			if (DrawStatus) {
