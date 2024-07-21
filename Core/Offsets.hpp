@@ -58,6 +58,8 @@ constexpr long OFF_OBSERVER_LIST_IN_ARRAY = 0x974; // 0x964 before
 constexpr long OFF_SKY_DIVE_STATUS = 0x4734;   //m_skydiveState
 constexpr long OFF_DUCK_STATUS = 0x2a70;   // m_duckState
 constexpr long OFF_CENTITY_FLAGS = 0x00c8;   //m_fFlags
+constexpr long OFF_XP = 0x3734;   //m_xp
+
 
 // Weapon
 constexpr long OFF_WEAPON_HANDLE = 0x1944;            //[RecvTable.DT_Player]->m_latestPrimaryWeapons
