@@ -529,22 +529,22 @@ struct Player {
         return BonePosition;
     }
     
-    int GetPlayerLevel()
+        int GetPlayerLevel()
     {
-        int m_xp = Memory::Read<int>(BasePointer + 0x366c); //m_xp
+        int m_xp = Memory::Read<int>(BasePointer + OFF_XP); //m_xp
         if (m_xp < 0) return 0;
         if (m_xp < 100) return 1;
-
+        
         int levels[] = { 2750, 6650, 11400, 17000, 23350, 30450, 38300, 46450, 55050,
                         64100, 73600, 83550, 93950, 104800, 116100, 127850, 140050, 152400, 164900,
                         177550, 190350, 203300, 216400, 229650, 243050, 256600, 270300, 284150, 298150,
                         312300, 326600, 341050, 355650, 370400, 385300, 400350, 415550, 430900, 446400,
                         462050, 477850, 493800, 509900, 526150, 542550, 559100, 575800, 592650, 609650, 626800,
                         644100, 661550, 679150, 696900, 714800 };
-
+        
         int level = 56;
         int arraySize = sizeof(levels) / sizeof(levels[0]);
-
+        
         for (int i = 0; i < arraySize; i++)
         {
             if (m_xp < levels[i])
