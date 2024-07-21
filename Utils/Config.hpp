@@ -1628,6 +1628,7 @@ namespace Config
 		bool DrawStatus = false;
 		bool DrawWeapon = true;
 		bool DrawLegend = true;
+        bool DrawLevel = true;
 		bool ShowMaxStatusValues = true;
 	};
 
@@ -1672,6 +1673,8 @@ namespace Config
 		bool DrawStatus = true;
 		bool DrawWeapon = false;
 		bool DrawLegend = false;
+        bool DrawLevel = true;
+
 		bool ShowMaxStatusValues = true;
 	};
 
