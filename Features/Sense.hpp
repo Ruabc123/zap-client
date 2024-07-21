@@ -1193,8 +1193,6 @@ struct Sense {
 			}
 
 			if (DrawLevel && DrawNames) {
-                		if(p->IsDummy()) continue;
-
 
                 		char buffer[256];
                 		std::string lvl = std::to_string(p->GetPlayerLevel());
@@ -1212,8 +1210,6 @@ struct Sense {
                 		float x = (LocalOriginW2S.x + width) - (width * 2) + 4.f;
                 		//Vector2D(LocalOriginW2S.x, LocalOriginW2S.y +2.f) Vector2D(x, HeadPositionW2S.y - 3.f)
                 		Renderer::DrawText(Canvas, Vector2D(x, y), buffer, ImColor(255,255,255), Features::Sense::TextOutline, false, false);  //TODO: make option for this 2 be in diffrent locations around the box, currently it sits roughly half way up the right side of the players box
-
-
             		}
 			
 			if (DrawStatus) {
