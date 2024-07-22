@@ -1192,7 +1192,7 @@ struct Sense {
 					Renderer::DrawText(Canvas, WeaponPosition, WeaponHeldText.c_str(), WeaponColor, Features::Sense::TextOutline, true, false);
 			}
 
-			if (DrawLevel && DrawNames) {
+			if (DrawLevel) {
 
                 		char buffer[256];
                 		std::string lvl = std::to_string(p->GetPlayerLevel());
