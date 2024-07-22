@@ -1977,6 +1977,10 @@ struct Menu
 					if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
 						ImGui::SetTooltip("Show how far away the enemies are");
 
+					ImGui::Checkbox("Draw Level", &Features::Sense::Teammate::DrawLevel);
+                    			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                        			ImGui::SetTooltip("Show the teammates level");
+
 					ImGui::Checkbox("Draw Legend", &Features::Sense::Teammate::DrawLegend);
 					if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
 						ImGui::SetTooltip("Show What Legend The Teammate Is Playing As.");
